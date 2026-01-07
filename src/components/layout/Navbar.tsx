@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Search, User, Bell, Menu, X, Settings, Crown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { useTheme, quickAccessThemes } from '@/contexts/ThemeContext';
 import {
   DropdownMenu,
@@ -11,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Link } from 'react-router-dom';
+import SearchOverlay from '@/components/search/SearchOverlay';
 
 const Navbar: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -47,17 +47,15 @@ const Navbar: React.FC = () => {
             </Link>
           </div>
 
-          {/* Search Bar */}
-          <div className={`${isSearchOpen ? 'flex' : 'hidden'} md:flex items-center flex-1 max-w-md mx-4`}>
-            <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search anime, donghua..."
-                className="pl-10 bg-secondary/50 border-border/50 focus:border-primary"
-              />
-            </div>
-          </div>
+          {/* Search Button */}
+          <Button
+            variant="ghost"
+            className="hidden md:flex items-center gap-2 px-4 text-muted-foreground hover:text-foreground"
+            onClick={() => setIsSearchOpen(true)}
+          >
+            <Search className="w-4 h-4" />
+            <span>Search anime...</span>
+          </Button>
 
           {/* Right Section */}
           <div className="flex items-center gap-2">
@@ -111,10 +109,12 @@ const Navbar: React.FC = () => {
                   <Crown className="w-4 h-4 mr-2" />
                   <span className="gradient-text font-medium">Go Premium</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="w-4 h-4 mr-2" />
-                  Settings
-                </DropdownMenuItem>
+                <Link to="/settings">
+                  <DropdownMenuItem>
+                    <Settings className="w-4 h-4 mr-2" />
+                    Settings
+                  </DropdownMenuItem>
+                </Link>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Sign In</DropdownMenuItem>
               </DropdownMenuContent>
@@ -168,6 +168,9 @@ const Navbar: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Search Overlay */}
+      <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </nav>
   );
 };
