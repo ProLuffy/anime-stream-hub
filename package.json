@@ -27,7 +27,8 @@
     "sonner": "^1.4.3",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
-    "@react-oauth/google": "^0.12.1"
+    "@react-oauth/google": "^0.12.1",
+    "lovable-tagger": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.27",
