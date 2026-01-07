@@ -1,5 +1,5 @@
 import { Toaster } from "@/components/ui/toaster";
-import { Sonner } from "@/components/ui/sonner";
+import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -27,7 +27,6 @@ const App = () => {
   const [customTheme, setCustomTheme] = useState('default');
 
   useEffect(() => {
-    // Load saved theme from localStorage
     const savedTheme = localStorage.getItem('anicrew_theme');
     if (savedTheme) setCustomTheme(savedTheme);
   }, []);
@@ -45,7 +44,7 @@ const App = () => {
             <Toaster />
             <Sonner />
             
-            {/* Theme Switcher in Header */}
+            {/* Theme Switcher */}
             <div style={{ 
               position: 'fixed', 
               top: '10px', 
@@ -61,22 +60,18 @@ const App = () => {
 
             <BrowserRouter>
               <Routes>
-                {/* Existing Routes */}
                 <Route path="/" element={<Index />} />
                 <Route path="/anime/:id" element={<AnimeDetail />} />
                 <Route path="/settings" element={<Settings />} />
                 
-                {/* AniCrew Backend Integrated Routes */}
+                {/* AniCrew Backend Routes */}
                 <Route path="/browse/anime" element={<AnimeBrowse />} />
                 <Route path="/browse/donghua" element={<DonghuaBrowse />} />
                 <Route path="/watch/:slug" element={<WatchPage />} />
                 <Route path="/watchlist" element={<WatchlistPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 
-                {/* Fallback for old watch route */}
                 <Route path="/watch/:animeId/:episodeId" element={<WatchPage />} />
-                
-                {/* 404 */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
@@ -87,24 +82,18 @@ const App = () => {
   );
 };
 
-// Simple Login Page Component
-const LoginPage = () => {
-  return (
-    <div style={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
-      alignItems: 'center', 
-      justifyContent: 'center', 
-      minHeight: '100vh',
-      padding: '20px'
-    }}>
-      <h1 style={{ marginBottom: '30px' }}>Login to AniCrew</h1>
-      <GoogleLogin onLoginSuccess={(result) => {
-        console.log('Login successful:', result);
-        window.location.href = '/';
-      }} />
-    </div>
-  );
-};
+const LoginPage = () => (
+  <div style={{ 
+    display: 'flex', 
+    flexDirection: 'column', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    minHeight: '100vh',
+    padding: '20px'
+  }}>
+    <h1 style={{ marginBottom: '30px' }}>Login to AniCrew</h1>
+    <GoogleLogin onLoginSuccess={() => window.location.href = '/'} />
+  </div>
+);
 
 export default App;
