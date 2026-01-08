@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/select";
 
 // Use popular donghua + add more for demo
-const allDonghua = [...popularDonghua, ...trendingAnime.map(a => ({ ...a, type: 'Donghua' as const }))];
+const allDonghua = [...popularDonghua.map(d => ({ ...d, type: 'donghua' as const })), ...trendingAnime.map(a => ({ ...a, type: 'donghua' as const }))];
 
 const genres = [
   'Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Martial Arts',
@@ -280,7 +280,7 @@ const DonghuaBrowse: React.FC = () => {
             : "flex flex-col gap-4"
           }>
             {sortedDonghua.map((anime, index) => (
-              <AnimeCard key={`${anime.id}-${index}`} anime={anime} />
+              <AnimeCard key={`${anime.id}-${index}`} {...anime} />
             ))}
           </div>
 
