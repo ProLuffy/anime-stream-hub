@@ -41,11 +41,17 @@ export const useWatchlist = () => {
     }
   }, [watchlist, addToWatchlist, removeFromWatchlist]);
 
+  const clearWatchlist = useCallback(() => {
+    setWatchlist([]);
+    localStorage.removeItem('anicrew-watchlist');
+  }, []);
+
   return {
     watchlist,
     addToWatchlist,
     removeFromWatchlist,
     isInWatchlist,
     toggleWatchlist,
+    clearWatchlist,
   };
 };

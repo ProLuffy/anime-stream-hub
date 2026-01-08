@@ -6,12 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useWatchlist } from '@/hooks/useWatchlist';
-import { trendingAnime } from '@/data/mockAnime';
+import { trendingAnime, latestReleases, popularDonghua } from '@/data/mockAnime';
 import { 
   Play, Trash2, Share2, Copy, Check, BookmarkX, 
-  ExternalLink, Calendar, Star 
+  Calendar, Star 
 } from 'lucide-react';
 import { toast } from 'sonner';
+
+const allAnime = [...trendingAnime, ...latestReleases, ...popularDonghua];
 
 const WatchlistPage: React.FC = () => {
   const { watchlist, removeFromWatchlist, clearWatchlist } = useWatchlist();
@@ -20,7 +22,7 @@ const WatchlistPage: React.FC = () => {
 
   // Map watchlist IDs to anime data
   const watchlistAnime = watchlist.map(id => 
-    trendingAnime.find(a => a.id === id)
+    allAnime.find(a => a.id === id)
   ).filter(Boolean);
 
   useEffect(() => {
@@ -121,13 +123,13 @@ const WatchlistPage: React.FC = () => {
                   {/* Thumbnail */}
                   <div className="w-32 h-44 flex-shrink-0 relative">
                     <img
-                      src={anime.thumbnail}
+                      src={anime.image}
                       alt={anime.title}
                       className="w-full h-full object-cover"
                     />
                     <Badge 
                       className="absolute top-2 left-2"
-                      variant={anime.type === 'Anime' ? 'default' : 'secondary'}
+                      variant={anime.type === 'anime' ? 'default' : 'secondary'}
                     >
                       {anime.type}
                     </Badge>
@@ -144,7 +146,7 @@ const WatchlistPage: React.FC = () => {
                         </span>
                         <span className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
-                          {anime.year}
+                          {anime.episodes} EP
                         </span>
                       </div>
                       <div className="flex flex-wrap gap-1">

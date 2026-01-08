@@ -12,6 +12,7 @@ import AnimeBrowse from "./pages/AnimeBrowse";
 import DonghuaBrowse from "./pages/DonghuaBrowse";
 import WatchPage from "./pages/WatchPage";
 import WatchlistPage from "./pages/WatchlistPage";
+import AuthPage from "./pages/AuthPage";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<AuthPage />} />
               <Route path="/anime" element={<AnimeBrowse />} />
               <Route path="/anime/:id" element={<AnimeDetail />} />
               <Route path="/donghua" element={<DonghuaBrowse />} />

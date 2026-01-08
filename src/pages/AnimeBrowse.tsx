@@ -290,7 +290,7 @@ const AnimeBrowse: React.FC = () => {
             : "flex flex-col gap-4"
           }>
             {sortedAnime.map((anime, index) => (
-              <AnimeCard key={`${anime.id}-${index}`} anime={anime} />
+              <AnimeCard key={`${anime.id}-${index}`} {...anime} />
             ))}
           </div>
 

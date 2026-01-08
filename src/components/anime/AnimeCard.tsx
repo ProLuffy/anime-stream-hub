@@ -12,6 +12,7 @@ export interface AnimeCardProps {
   type: 'anime' | 'donghua';
   status: 'ongoing' | 'completed';
   genres: string[];
+  year?: string;
 }
 
 const AnimeCard: React.FC<AnimeCardProps> = ({
