@@ -9,7 +9,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { 
-  Download, Bookmark, ThumbsUp, MessageCircle, Share2, Clock
+  Download, Bookmark, ThumbsUp, MessageCircle, Share2, Clock,
+  ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { useWatchProgress } from '@/hooks/useWatchProgress';
 import { useWatchlist } from '@/hooks/useWatchlist';
@@ -192,45 +193,7 @@ const WatchPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Audio & Subtitle Selectors */}
-              <Card>
-                <CardContent className="p-4">
-                  <div className="flex flex-wrap gap-4">
-                    <div className="flex-1 min-w-[200px]">
-                      <label className="text-sm font-medium mb-2 flex items-center gap-2">
-                        <Volume2 className="w-4 h-4" />
-                        Audio Language
-                      </label>
-                      <Select value={audioLang} onValueChange={setAudioLang}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {audioLanguages.map(lang => (
-                            <SelectItem key={lang.value} value={lang.value}>{lang.label}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="flex-1 min-w-[200px]">
-                      <label className="text-sm font-medium mb-2 flex items-center gap-2">
-                        <Subtitles className="w-4 h-4" />
-                        Subtitles
-                      </label>
-                      <Select value={subtitleLang} onValueChange={setSubtitleLang}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {subtitleLanguages.map(lang => (
-                            <SelectItem key={lang.value} value={lang.value}>{lang.label}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              {/* Note: Audio, Subtitle, Quality, Speed settings are now in the VideoPlayer settings menu */}
 
               {/* Comments Section */}
               <Card>
