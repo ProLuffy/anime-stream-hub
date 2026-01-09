@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Search, User, Bell, Menu, X, Settings, Crown } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, User, Bell, Menu, X, Settings, Crown, LogOut, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useTheme, quickAccessThemes } from '@/contexts/ThemeContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,13 +9,39 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Link } from 'react-router-dom';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Link, useNavigate } from 'react-router-dom';
 import SearchOverlay from '@/components/search/SearchOverlay';
+import { toast } from 'sonner';
+
+interface StoredUser {
+  email: string;
+  username: string;
+  avatar?: string;
+  isPremium: boolean;
+  isAdmin?: boolean;
+}
 
 const Navbar: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<StoredUser | null>(null);
   const { currentTheme, setTheme, quickThemes } = useTheme();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('anicrew_user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('anicrew_user');
+    setUser(null);
+    toast.success('Logged out successfully');
+    navigate('/');
+  };
 
   return (
     <nav className="sticky top-0 z-50 glass-effect border-b border-border">
@@ -82,6 +108,16 @@ const Navbar: React.FC = () => {
               ))}
             </div>
 
+            {/* Premium Button */}
+            {!user?.isPremium && (
+              <Link to="/premium" className="hidden sm:block">
+                <Button variant="outline" size="sm" className="gap-1 border-amber-500/50 text-amber-500 hover:bg-amber-500/10">
+                  <Crown className="w-4 h-4" />
+                  Premium
+                </Button>
+              </Link>
+            )}
+
             {/* Notifications */}
             <Button variant="ghost" size="icon" className="relative">
               <Bell className="w-5 h-5" />
@@ -91,32 +127,91 @@ const Navbar: React.FC = () => {
             {/* User Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <User className="w-5 h-5" />
+                <Button variant="ghost" size="icon" className="relative">
+                  {user ? (
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage src={user.avatar} />
+                      <AvatarFallback className="bg-primary text-primary-foreground text-sm">
+                        {user.username[0].toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  ) : (
+                    <User className="w-5 h-5" />
+                  )}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <div className="px-3 py-2">
-                  <p className="text-sm font-medium">Guest User</p>
-                  <p className="text-xs text-muted-foreground">Sign in to save progress</p>
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <User className="w-4 h-4 mr-2" />
-                  Profile
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Crown className="w-4 h-4 mr-2" />
-                  <span className="gradient-text font-medium">Go Premium</span>
-                </DropdownMenuItem>
-                <Link to="/settings">
-                  <DropdownMenuItem>
-                    <Settings className="w-4 h-4 mr-2" />
-                    Settings
-                  </DropdownMenuItem>
-                </Link>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Sign In</DropdownMenuItem>
+                {user ? (
+                  <>
+                    <div className="px-3 py-2">
+                      <p className="text-sm font-medium">{user.username}</p>
+                      <p className="text-xs text-muted-foreground">{user.email}</p>
+                      {user.isPremium && (
+                        <span className="inline-flex items-center gap-1 mt-1 text-xs text-amber-500">
+                          <Crown className="w-3 h-3" /> Premium Member
+                        </span>
+                      )}
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link to="/settings" className="w-full cursor-pointer">
+                        <User className="w-4 h-4 mr-2" />
+                        Profile
+                      </Link>
+                    </DropdownMenuItem>
+                    {!user.isPremium && (
+                      <DropdownMenuItem asChild>
+                        <Link to="/premium" className="w-full cursor-pointer">
+                          <Crown className="w-4 h-4 mr-2 text-amber-500" />
+                          <span className="gradient-text font-medium">Go Premium</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem asChild>
+                      <Link to="/settings" className="w-full cursor-pointer">
+                        <Settings className="w-4 h-4 mr-2" />
+                        Settings
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin" className="w-full cursor-pointer">
+                        <Shield className="w-4 h-4 mr-2" />
+                        Admin Panel
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive">
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <>
+                    <div className="px-3 py-2">
+                      <p className="text-sm font-medium">Guest User</p>
+                      <p className="text-xs text-muted-foreground">Sign in to save progress</p>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link to="/premium" className="w-full cursor-pointer">
+                        <Crown className="w-4 h-4 mr-2 text-amber-500" />
+                        <span className="gradient-text font-medium">Go Premium</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/settings" className="w-full cursor-pointer">
+                        <Settings className="w-4 h-4 mr-2" />
+                        Settings
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link to="/auth" className="w-full cursor-pointer font-medium">
+                        Sign In
+                      </Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 

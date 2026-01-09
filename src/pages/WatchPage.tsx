@@ -2,45 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import VideoPlayer from '@/components/player/VideoPlayer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { 
-  Play, ChevronLeft, ChevronRight, Download, Bookmark,
-  ThumbsUp, MessageCircle, Share2, Volume2, Subtitles,
-  SkipBack, SkipForward, Settings, Maximize, Clock
+  Download, Bookmark, ThumbsUp, MessageCircle, Share2, Clock
 } from 'lucide-react';
 import { useWatchProgress } from '@/hooks/useWatchProgress';
 import { useWatchlist } from '@/hooks/useWatchlist';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import { trendingAnime } from '@/data/mockAnime';
-import { getEpisodesForAnime, Episode } from '@/data/mockEpisodes';
-import { mockComments, Comment } from '@/data/mockComments';
+import { getEpisodesForAnime } from '@/data/mockEpisodes';
+import { mockComments } from '@/data/mockComments';
 import { toast } from 'sonner';
-
-const audioLanguages = [
-  { value: 'japanese', label: 'Japanese' },
-  { value: 'english', label: 'English Dub' },
-  { value: 'hindi', label: 'Hindi Dub' },
-  { value: 'tamil', label: 'Tamil Dub' },
-];
-
-const subtitleLanguages = [
-  { value: 'none', label: 'Off' },
-  { value: 'english', label: 'English' },
-  { value: 'hindi', label: 'Hindi' },
-  { value: 'spanish', label: 'Spanish' },
-  { value: 'portuguese', label: 'Portuguese' },
-];
 
 interface DisplayComment {
   id: string;
@@ -55,11 +32,9 @@ const WatchPage: React.FC = () => {
   const { animeId, episodeId } = useParams<{ animeId: string; episodeId: string }>();
   const navigate = useNavigate();
   const { profile } = useUserProfile();
-  const { saveProgress, getProgress } = useWatchProgress();
+  const { saveProgress } = useWatchProgress();
   const { isInWatchlist, toggleWatchlist } = useWatchlist();
   
-  const [audioLang, setAudioLang] = useState('japanese');
-  const [subtitleLang, setSubtitleLang] = useState('english');
   const [newComment, setNewComment] = useState('');
   const [comments, setComments] = useState<DisplayComment[]>(() => 
     mockComments.map(c => ({
@@ -85,7 +60,7 @@ const WatchPage: React.FC = () => {
   // Save progress on episode change
   useEffect(() => {
     if (animeId && episodeId) {
-      saveProgress(animeId, episodeId, 0, 1440); // 24 minutes in seconds
+      saveProgress(animeId, episodeId, 0, 1440);
     }
   }, [animeId, episodeId, saveProgress]);
 
@@ -109,6 +84,7 @@ const WatchPage: React.FC = () => {
   const handleDownload = () => {
     if (!profile.isPremium) {
       toast.error('Premium subscription required to download');
+      navigate('/premium');
       return;
     }
     toast.success('Starting download...');
@@ -150,50 +126,16 @@ const WatchPage: React.FC = () => {
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-6">
               {/* Video Player */}
-              <div className="relative aspect-video bg-black rounded-xl overflow-hidden">
-                {/* StreamTape/DoomStream Embed Placeholder */}
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-background/80 to-background">
-                  <div className="text-center">
-                    <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mb-4 mx-auto">
-                      <Play className="w-10 h-10 text-primary" fill="currentColor" />
-                    </div>
-                    <p className="text-lg font-medium mb-2">{anime.title}</p>
-                    <p className="text-muted-foreground">Episode {currentEpNum}: {currentEpisode.title}</p>
-                    <p className="text-xs text-muted-foreground mt-4">
-                      Video player will embed StreamTape/DoomStream here
-                    </p>
-                  </div>
-                </div>
-
-                {/* Video Controls Overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
-                        <SkipBack className="w-5 h-5" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
-                        <Play className="w-6 h-6" fill="currentColor" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
-                        <SkipForward className="w-5 h-5" />
-                      </Button>
-                      <span className="text-white text-sm ml-2">00:00 / {currentEpisode.duration}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
-                        <Volume2 className="w-5 h-5" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
-                        <Settings className="w-5 h-5" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
-                        <Maximize className="w-5 h-5" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <VideoPlayer
+                title={anime.title}
+                episodeTitle={currentEpisode.title}
+                episodeNumber={currentEpNum}
+                thumbnail={anime.image}
+                onPrev={() => prevEpisode && navigate(`/watch/${animeId}/${prevEpisode}`)}
+                onNext={() => nextEpisode && navigate(`/watch/${animeId}/${nextEpisode}`)}
+                hasPrev={!!prevEpisode}
+                hasNext={!!nextEpisode}
+              />
 
               {/* Episode Navigation & Controls */}
               <div className="flex flex-wrap items-center justify-between gap-4">

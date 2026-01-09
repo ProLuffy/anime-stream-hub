@@ -13,6 +13,8 @@ import DonghuaBrowse from "./pages/DonghuaBrowse";
 import WatchPage from "./pages/WatchPage";
 import WatchlistPage from "./pages/WatchlistPage";
 import AuthPage from "./pages/AuthPage";
+import AdminDashboard from "./pages/AdminDashboard";
+import PremiumPage from "./pages/PremiumPage";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +35,8 @@ const App = () => {
               <Route path="/watch/:animeId/:episodeId" element={<WatchPage />} />
               <Route path="/watchlist" element={<WatchlistPage />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/premium" element={<PremiumPage />} />
+              <Route path="/admin" element={<AdminDashboard />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
