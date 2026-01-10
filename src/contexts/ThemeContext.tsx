@@ -89,16 +89,32 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     
     // Remove all theme classes from document root
     const root = document.documentElement;
+    const body = document.body;
+    
+    // Get all classes to remove
+    const classesToRemove: string[] = [];
     root.classList.forEach(cls => {
       if (cls.startsWith('theme-')) {
-        root.classList.remove(cls);
+        classesToRemove.push(cls);
       }
+    });
+    
+    // Remove theme classes from both root and body
+    classesToRemove.forEach(cls => {
+      root.classList.remove(cls);
+      body.classList.remove(cls);
     });
     
     // Add new theme class if not default
     if (currentTheme.id !== 'root') {
       root.classList.add(`theme-${currentTheme.id}`);
+      body.classList.add(`theme-${currentTheme.id}`);
     }
+    
+    // Force a repaint by toggling a CSS property
+    root.style.colorScheme = currentTheme.category === 'dark' || currentTheme.category === 'special' ? 'dark' : 'light';
+    
+    console.log('Theme applied:', currentTheme.id, 'Class list:', root.classList.toString());
   }, [currentTheme]);
 
   const setTheme = (theme: Theme) => {

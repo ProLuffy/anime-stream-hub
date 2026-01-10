@@ -5,6 +5,8 @@ export interface UserProfile {
   email?: string;
   avatar: string;
   isPremium: boolean;
+  premiumPlan?: string;
+  premiumExpiry?: string;
   isAdmin?: boolean;
   preferredLanguage: string;
   autoPlay: boolean;
