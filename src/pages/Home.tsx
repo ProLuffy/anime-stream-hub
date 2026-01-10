@@ -99,11 +99,12 @@ const Home: React.FC = () => {
               id: s._id,
               title: s.title,
               image: s.cover,
-              rating: s.rating?.toString() || '8.5',
-              episodes: s.episodes || 0,
+              rating: s.rating ?? 8.5,
+              episodes: 12,
               type: s.type,
-              status: s.status === 'completed' ? 'finished' : 'ongoing',
-            })}
+              status: s.status === 'completed' ? 'completed' : 'ongoing',
+              genres: s.genres || [],
+            }))}
           />
         )}
       </div>

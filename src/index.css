@@ -7,6 +7,7 @@
 
 /* ========== BASE THEME TOKENS ========== */
 @layer base {
+  /* Default: Moonlight (Light) */
   :root {
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
@@ -41,68 +42,7 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  /* Midnight Sakura - Dark Theme */
-  .theme-midnight-sakura {
-    --background: 280 30% 8%;
-    --foreground: 0 0% 95%;
-    --card: 280 25% 12%;
-    --card-foreground: 0 0% 95%;
-    --popover: 280 25% 12%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 330 80% 65%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 280 20% 18%;
-    --secondary-foreground: 0 0% 95%;
-    --muted: 280 20% 15%;
-    --muted-foreground: 280 10% 60%;
-    --accent: 330 60% 55%;
-    --accent-foreground: 0 0% 100%;
-    --border: 280 20% 20%;
-    --input: 280 20% 15%;
-    --ring: 330 80% 65%;
-  }
-
-  /* Obsidian Night - Dark Theme */
-  .theme-obsidian-night {
-    --background: 220 20% 5%;
-    --foreground: 0 0% 95%;
-    --card: 220 18% 10%;
-    --card-foreground: 0 0% 95%;
-    --popover: 220 18% 10%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 200 80% 55%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 220 15% 15%;
-    --secondary-foreground: 0 0% 95%;
-    --muted: 220 15% 12%;
-    --muted-foreground: 220 10% 55%;
-    --accent: 200 60% 50%;
-    --accent-foreground: 0 0% 100%;
-    --border: 220 15% 18%;
-    --input: 220 15% 12%;
-    --ring: 200 80% 55%;
-  }
-
-  /* Neon Tokyo - Dark Theme */
-  .theme-neon-tokyo {
-    --background: 270 40% 6%;
-    --foreground: 0 0% 95%;
-    --card: 270 35% 10%;
-    --card-foreground: 0 0% 95%;
-    --popover: 270 35% 10%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 320 100% 60%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 270 30% 15%;
-    --secondary-foreground: 0 0% 95%;
-    --muted: 270 25% 12%;
-    --muted-foreground: 270 15% 55%;
-    --accent: 180 100% 50%;
-    --accent-foreground: 0 0% 0%;
-    --border: 270 25% 18%;
-    --input: 270 25% 12%;
-    --ring: 320 100% 60%;
-  }
+  /* ========== LIGHT THEMES ========== */
 
   /* Sakura Snow - Light Theme */
   .theme-sakura-snow {
@@ -146,67 +86,279 @@
     --ring: 210 80% 50%;
   }
 
-  /* Solar Flare - Special Theme */
-  .theme-solar-flare {
-    --background: 15 60% 8%;
-    --foreground: 35 90% 90%;
-    --card: 15 50% 12%;
-    --card-foreground: 35 90% 90%;
-    --popover: 15 50% 12%;
-    --popover-foreground: 35 90% 90%;
-    --primary: 25 100% 55%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 15 40% 18%;
-    --secondary-foreground: 35 90% 90%;
-    --muted: 15 35% 15%;
-    --muted-foreground: 25 50% 60%;
-    --accent: 35 100% 50%;
-    --accent-foreground: 0 0% 0%;
-    --border: 15 40% 22%;
-    --input: 15 35% 15%;
-    --ring: 25 100% 55%;
+  /* Ivory Sky - Light Theme */
+  .theme-ivory-sky {
+    --background: 50 50% 97%;
+    --foreground: 45 30% 15%;
+    --card: 48 45% 95%;
+    --card-foreground: 45 30% 15%;
+    --popover: 48 45% 95%;
+    --popover-foreground: 45 30% 15%;
+    --primary: 45 80% 50%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 48 30% 90%;
+    --secondary-foreground: 45 30% 15%;
+    --muted: 48 25% 92%;
+    --muted-foreground: 45 15% 45%;
+    --accent: 38 75% 55%;
+    --accent-foreground: 0 0% 10%;
+    --border: 48 25% 85%;
+    --input: 48 25% 88%;
+    --ring: 45 80% 50%;
   }
 
-  /* Space Odyssey - Special Theme */
-  .theme-space-odyssey {
-    --background: 240 50% 4%;
-    --foreground: 210 60% 90%;
-    --card: 240 45% 8%;
-    --card-foreground: 210 60% 90%;
-    --popover: 240 45% 8%;
-    --popover-foreground: 210 60% 90%;
-    --primary: 260 80% 65%;
+  /* Soft Pastel - Light Theme */
+  .theme-soft-pastel {
+    --background: 30 40% 97%;
+    --foreground: 30 25% 18%;
+    --card: 30 35% 95%;
+    --card-foreground: 30 25% 18%;
+    --popover: 30 35% 95%;
+    --popover-foreground: 30 25% 18%;
+    --primary: 280 60% 65%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 240 40% 12%;
-    --secondary-foreground: 210 60% 90%;
-    --muted: 240 35% 10%;
-    --muted-foreground: 240 25% 55%;
-    --accent: 200 100% 60%;
-    --accent-foreground: 0 0% 0%;
-    --border: 240 35% 15%;
-    --input: 240 35% 10%;
-    --ring: 260 80% 65%;
-  }
-
-  /* Studio Ghibli - Special Theme */
-  .theme-ghibli {
-    --background: 120 25% 96%;
-    --foreground: 120 30% 15%;
-    --card: 90 30% 94%;
-    --card-foreground: 120 30% 15%;
-    --popover: 90 30% 94%;
-    --popover-foreground: 120 30% 15%;
-    --primary: 85 60% 45%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 45 40% 90%;
-    --secondary-foreground: 120 30% 15%;
-    --muted: 80 25% 92%;
-    --muted-foreground: 120 15% 40%;
-    --accent: 35 80% 55%;
+    --secondary: 30 25% 90%;
+    --secondary-foreground: 30 25% 18%;
+    --muted: 30 20% 92%;
+    --muted-foreground: 30 15% 45%;
+    --accent: 340 50% 70%;
     --accent-foreground: 0 0% 100%;
-    --border: 90 25% 85%;
-    --input: 90 25% 88%;
-    --ring: 85 60% 45%;
+    --border: 30 20% 85%;
+    --input: 30 20% 88%;
+    --ring: 280 60% 65%;
+  }
+
+  /* Vanilla Cream - Light Theme */
+  .theme-vanilla-cream {
+    --background: 40 45% 96%;
+    --foreground: 35 30% 18%;
+    --card: 38 40% 94%;
+    --card-foreground: 35 30% 18%;
+    --popover: 38 40% 94%;
+    --popover-foreground: 35 30% 18%;
+    --primary: 35 85% 55%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 38 30% 88%;
+    --secondary-foreground: 35 30% 18%;
+    --muted: 38 25% 90%;
+    --muted-foreground: 35 15% 45%;
+    --accent: 25 80% 50%;
+    --accent-foreground: 0 0% 100%;
+    --border: 38 25% 82%;
+    --input: 38 25% 85%;
+    --ring: 35 85% 55%;
+  }
+
+  /* Morning Bloom - Light Theme */
+  .theme-morning-bloom {
+    --background: 120 30% 97%;
+    --foreground: 120 25% 15%;
+    --card: 115 28% 95%;
+    --card-foreground: 120 25% 15%;
+    --popover: 115 28% 95%;
+    --popover-foreground: 120 25% 15%;
+    --primary: 150 65% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 115 22% 90%;
+    --secondary-foreground: 120 25% 15%;
+    --muted: 115 18% 92%;
+    --muted-foreground: 120 12% 45%;
+    --accent: 340 55% 65%;
+    --accent-foreground: 0 0% 100%;
+    --border: 115 20% 85%;
+    --input: 115 20% 88%;
+    --ring: 150 65% 45%;
+  }
+
+  /* Paper White - Light Theme */
+  .theme-paper-white {
+    --background: 0 0% 99%;
+    --foreground: 0 0% 12%;
+    --card: 0 0% 97%;
+    --card-foreground: 0 0% 12%;
+    --popover: 0 0% 97%;
+    --popover-foreground: 0 0% 12%;
+    --primary: 220 70% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 94%;
+    --secondary-foreground: 0 0% 12%;
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 220 60% 60%;
+    --accent-foreground: 0 0% 100%;
+    --border: 0 0% 90%;
+    --input: 0 0% 92%;
+    --ring: 220 70% 50%;
+  }
+
+  /* Sunrise Tokyo - Light Theme */
+  .theme-sunrise-tokyo {
+    --background: 20 50% 97%;
+    --foreground: 15 30% 15%;
+    --card: 18 45% 95%;
+    --card-foreground: 15 30% 15%;
+    --popover: 18 45% 95%;
+    --popover-foreground: 15 30% 15%;
+    --primary: 15 90% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 18 35% 90%;
+    --secondary-foreground: 15 30% 15%;
+    --muted: 18 28% 92%;
+    --muted-foreground: 15 15% 45%;
+    --accent: 350 70% 55%;
+    --accent-foreground: 0 0% 100%;
+    --border: 18 28% 85%;
+    --input: 18 28% 88%;
+    --ring: 15 90% 55%;
+  }
+
+  /* Light Otaku - Light Theme */
+  .theme-light-otaku {
+    --background: 0 0% 96%;
+    --foreground: 260 20% 15%;
+    --card: 0 0% 94%;
+    --card-foreground: 260 20% 15%;
+    --popover: 0 0% 94%;
+    --popover-foreground: 260 20% 15%;
+    --primary: 260 75% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 90%;
+    --secondary-foreground: 260 20% 15%;
+    --muted: 0 0% 92%;
+    --muted-foreground: 260 10% 45%;
+    --accent: 320 65% 55%;
+    --accent-foreground: 0 0% 100%;
+    --border: 0 0% 85%;
+    --input: 0 0% 88%;
+    --ring: 260 75% 60%;
+  }
+
+  /* Peach Blossom - Light Theme */
+  .theme-peach-blossom {
+    --background: 10 60% 97%;
+    --foreground: 10 30% 18%;
+    --card: 10 55% 95%;
+    --card-foreground: 10 30% 18%;
+    --popover: 10 55% 95%;
+    --popover-foreground: 10 30% 18%;
+    --primary: 10 80% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 10 40% 90%;
+    --secondary-foreground: 10 30% 18%;
+    --muted: 10 32% 92%;
+    --muted-foreground: 10 15% 45%;
+    --accent: 340 70% 60%;
+    --accent-foreground: 0 0% 100%;
+    --border: 10 35% 85%;
+    --input: 10 35% 88%;
+    --ring: 10 80% 60%;
+  }
+
+  /* Cotton Candy - Light Theme */
+  .theme-cotton-candy {
+    --background: 330 50% 97%;
+    --foreground: 330 25% 18%;
+    --card: 330 45% 95%;
+    --card-foreground: 330 25% 18%;
+    --popover: 330 45% 95%;
+    --popover-foreground: 330 25% 18%;
+    --primary: 330 75% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 330 35% 90%;
+    --secondary-foreground: 330 25% 18%;
+    --muted: 330 28% 92%;
+    --muted-foreground: 330 15% 45%;
+    --accent: 200 70% 60%;
+    --accent-foreground: 0 0% 100%;
+    --border: 330 30% 85%;
+    --input: 330 30% 88%;
+    --ring: 330 75% 65%;
+  }
+
+  /* ========== DARK THEMES ========== */
+
+  /* Midnight Sakura - Dark Theme */
+  .theme-midnight-sakura {
+    --background: 280 30% 8%;
+    --foreground: 0 0% 95%;
+    --card: 280 25% 12%;
+    --card-foreground: 0 0% 95%;
+    --popover: 280 25% 12%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 330 80% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 280 20% 18%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 280 20% 15%;
+    --muted-foreground: 280 10% 60%;
+    --accent: 330 60% 55%;
+    --accent-foreground: 0 0% 100%;
+    --border: 280 20% 20%;
+    --input: 280 20% 15%;
+    --ring: 330 80% 65%;
+  }
+
+  /* Obsidian Night - Dark Theme */
+  .theme-obsidian-night {
+    --background: 220 20% 5%;
+    --foreground: 0 0% 95%;
+    --card: 220 18% 10%;
+    --card-foreground: 0 0% 95%;
+    --popover: 220 18% 10%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 200 80% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 15% 15%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 220 15% 12%;
+    --muted-foreground: 220 10% 55%;
+    --accent: 200 60% 50%;
+    --accent-foreground: 0 0% 100%;
+    --border: 220 15% 18%;
+    --input: 220 15% 12%;
+    --ring: 200 80% 55%;
+  }
+
+  /* Phantom Black - Dark Theme */
+  .theme-phantom-black {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 92%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 92%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 92%;
+    --primary: 270 70% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 92%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 270 50% 50%;
+    --accent-foreground: 0 0% 100%;
+    --border: 0 0% 15%;
+    --input: 0 0% 10%;
+    --ring: 270 70% 60%;
+  }
+
+  /* Neon Tokyo - Dark Theme */
+  .theme-neon-tokyo {
+    --background: 270 40% 6%;
+    --foreground: 0 0% 95%;
+    --card: 270 35% 10%;
+    --card-foreground: 0 0% 95%;
+    --popover: 270 35% 10%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 320 100% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 270 30% 15%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 270 25% 12%;
+    --muted-foreground: 270 15% 55%;
+    --accent: 180 100% 50%;
+    --accent-foreground: 0 0% 0%;
+    --border: 270 25% 18%;
+    --input: 270 25% 12%;
+    --ring: 320 100% 60%;
   }
 
   /* Crimson Void - Dark Theme */
@@ -230,6 +382,176 @@
     --ring: 0 85% 55%;
   }
 
+  /* Dark Otaku - Dark Theme */
+  .theme-dark-otaku {
+    --background: 0 0% 8%;
+    --foreground: 0 0% 92%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 92%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 92%;
+    --primary: 270 80% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 16%;
+    --secondary-foreground: 0 0% 92%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 320 70% 55%;
+    --accent-foreground: 0 0% 100%;
+    --border: 0 0% 20%;
+    --input: 0 0% 14%;
+    --ring: 270 80% 60%;
+  }
+
+  /* Cyber Shinobi - Dark Theme */
+  .theme-cyber-shinobi {
+    --background: 200 40% 6%;
+    --foreground: 180 30% 92%;
+    --card: 200 35% 10%;
+    --card-foreground: 180 30% 92%;
+    --popover: 200 35% 10%;
+    --popover-foreground: 180 30% 92%;
+    --primary: 180 100% 45%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 200 30% 14%;
+    --secondary-foreground: 180 30% 92%;
+    --muted: 200 25% 12%;
+    --muted-foreground: 200 15% 55%;
+    --accent: 160 80% 40%;
+    --accent-foreground: 0 0% 100%;
+    --border: 200 25% 18%;
+    --input: 200 25% 12%;
+    --ring: 180 100% 45%;
+  }
+
+  /* Shadow Realm - Dark Theme */
+  .theme-shadow-realm {
+    --background: 240 30% 5%;
+    --foreground: 240 15% 90%;
+    --card: 240 25% 9%;
+    --card-foreground: 240 15% 90%;
+    --popover: 240 25% 9%;
+    --popover-foreground: 240 15% 90%;
+    --primary: 260 70% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 20% 13%;
+    --secondary-foreground: 240 15% 90%;
+    --muted: 240 18% 11%;
+    --muted-foreground: 240 10% 50%;
+    --accent: 280 60% 50%;
+    --accent-foreground: 0 0% 100%;
+    --border: 240 18% 16%;
+    --input: 240 18% 11%;
+    --ring: 260 70% 55%;
+  }
+
+  /* Eclipse Blue - Dark Theme */
+  .theme-eclipse-blue {
+    --background: 220 45% 5%;
+    --foreground: 210 30% 92%;
+    --card: 220 40% 9%;
+    --card-foreground: 210 30% 92%;
+    --popover: 220 40% 9%;
+    --popover-foreground: 210 30% 92%;
+    --primary: 210 90% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 35% 13%;
+    --secondary-foreground: 210 30% 92%;
+    --muted: 220 30% 11%;
+    --muted-foreground: 220 15% 50%;
+    --accent: 190 80% 50%;
+    --accent-foreground: 0 0% 0%;
+    --border: 220 30% 16%;
+    --input: 220 30% 11%;
+    --ring: 210 90% 55%;
+  }
+
+  /* Oni Darkness - Dark Theme */
+  .theme-oni-darkness {
+    --background: 350 35% 6%;
+    --foreground: 350 15% 92%;
+    --card: 350 30% 10%;
+    --card-foreground: 350 15% 92%;
+    --popover: 350 30% 10%;
+    --popover-foreground: 350 15% 92%;
+    --primary: 350 85% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 350 25% 14%;
+    --secondary-foreground: 350 15% 92%;
+    --muted: 350 20% 12%;
+    --muted-foreground: 350 12% 50%;
+    --accent: 20 80% 50%;
+    --accent-foreground: 0 0% 100%;
+    --border: 350 22% 17%;
+    --input: 350 20% 12%;
+    --ring: 350 85% 55%;
+  }
+
+  /* Void Purple - Dark Theme */
+  .theme-void-purple {
+    --background: 270 40% 5%;
+    --foreground: 270 15% 92%;
+    --card: 270 35% 9%;
+    --card-foreground: 270 15% 92%;
+    --popover: 270 35% 9%;
+    --popover-foreground: 270 15% 92%;
+    --primary: 280 80% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 270 30% 13%;
+    --secondary-foreground: 270 15% 92%;
+    --muted: 270 25% 11%;
+    --muted-foreground: 270 12% 50%;
+    --accent: 300 70% 55%;
+    --accent-foreground: 0 0% 100%;
+    --border: 270 25% 16%;
+    --input: 270 25% 11%;
+    --ring: 280 80% 60%;
+  }
+
+  /* Noir Anime - Dark Theme */
+  .theme-noir-anime {
+    --background: 0 0% 7%;
+    --foreground: 0 0% 90%;
+    --card: 0 0% 11%;
+    --card-foreground: 0 0% 90%;
+    --popover: 0 0% 11%;
+    --popover-foreground: 0 0% 90%;
+    --primary: 0 0% 80%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 90%;
+    --muted: 0 0% 13%;
+    --muted-foreground: 0 0% 50%;
+    --accent: 0 0% 70%;
+    --accent-foreground: 0 0% 10%;
+    --border: 0 0% 18%;
+    --input: 0 0% 13%;
+    --ring: 0 0% 80%;
+  }
+
+  /* ========== SPECIAL ANIMATED THEMES ========== */
+
+  /* Solar Flare - Special Theme */
+  .theme-solar-flare {
+    --background: 15 60% 8%;
+    --foreground: 35 90% 90%;
+    --card: 15 50% 12%;
+    --card-foreground: 35 90% 90%;
+    --popover: 15 50% 12%;
+    --popover-foreground: 35 90% 90%;
+    --primary: 25 100% 55%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 15 40% 18%;
+    --secondary-foreground: 35 90% 90%;
+    --muted: 15 35% 15%;
+    --muted-foreground: 25 50% 60%;
+    --accent: 35 100% 50%;
+    --accent-foreground: 0 0% 0%;
+    --border: 15 40% 22%;
+    --input: 15 35% 15%;
+    --ring: 25 100% 55%;
+  }
+
   /* Vaporwave Neon - Special Theme */
   .theme-vaporwave-neon {
     --background: 280 50% 8%;
@@ -251,6 +573,111 @@
     --ring: 300 100% 65%;
   }
 
+  /* Retro Anime - Special Theme */
+  .theme-retro-anime {
+    --background: 45 40% 10%;
+    --foreground: 45 80% 90%;
+    --card: 45 35% 14%;
+    --card-foreground: 45 80% 90%;
+    --popover: 45 35% 14%;
+    --popover-foreground: 45 80% 90%;
+    --primary: 45 100% 55%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 45 30% 20%;
+    --secondary-foreground: 45 80% 90%;
+    --muted: 45 25% 17%;
+    --muted-foreground: 45 40% 55%;
+    --accent: 30 90% 50%;
+    --accent-foreground: 0 0% 0%;
+    --border: 45 28% 24%;
+    --input: 45 25% 17%;
+    --ring: 45 100% 55%;
+  }
+
+  /* Glassmorphism - Special Theme */
+  .theme-glassmorphism {
+    --background: 200 30% 12%;
+    --foreground: 200 40% 92%;
+    --card: 200 25% 16%;
+    --card-foreground: 200 40% 92%;
+    --popover: 200 25% 16%;
+    --popover-foreground: 200 40% 92%;
+    --primary: 200 80% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 200 20% 22%;
+    --secondary-foreground: 200 40% 92%;
+    --muted: 200 18% 19%;
+    --muted-foreground: 200 20% 55%;
+    --accent: 180 70% 55%;
+    --accent-foreground: 0 0% 0%;
+    --border: 200 18% 26%;
+    --input: 200 18% 19%;
+    --ring: 200 80% 60%;
+  }
+
+  /* Studio Ghibli - Special Theme */
+  .theme-ghibli {
+    --background: 120 25% 96%;
+    --foreground: 120 30% 15%;
+    --card: 90 30% 94%;
+    --card-foreground: 120 30% 15%;
+    --popover: 90 30% 94%;
+    --popover-foreground: 120 30% 15%;
+    --primary: 85 60% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 45 40% 90%;
+    --secondary-foreground: 120 30% 15%;
+    --muted: 80 25% 92%;
+    --muted-foreground: 120 15% 40%;
+    --accent: 35 80% 55%;
+    --accent-foreground: 0 0% 100%;
+    --border: 90 25% 85%;
+    --input: 90 25% 88%;
+    --ring: 85 60% 45%;
+  }
+
+  /* Monochrome Pro - Special Theme */
+  .theme-monochrome-pro {
+    --background: 0 0% 10%;
+    --foreground: 0 0% 88%;
+    --card: 0 0% 14%;
+    --card-foreground: 0 0% 88%;
+    --popover: 0 0% 14%;
+    --popover-foreground: 0 0% 88%;
+    --primary: 0 0% 75%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 0 0% 18%;
+    --secondary-foreground: 0 0% 88%;
+    --muted: 0 0% 16%;
+    --muted-foreground: 0 0% 50%;
+    --accent: 0 0% 65%;
+    --accent-foreground: 0 0% 10%;
+    --border: 0 0% 22%;
+    --input: 0 0% 16%;
+    --ring: 0 0% 75%;
+  }
+
+  /* Space Odyssey - Special Theme */
+  .theme-space-odyssey {
+    --background: 240 50% 4%;
+    --foreground: 210 60% 90%;
+    --card: 240 45% 8%;
+    --card-foreground: 210 60% 90%;
+    --popover: 240 45% 8%;
+    --popover-foreground: 210 60% 90%;
+    --primary: 260 80% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 40% 12%;
+    --secondary-foreground: 210 60% 90%;
+    --muted: 240 35% 10%;
+    --muted-foreground: 240 25% 55%;
+    --accent: 200 100% 60%;
+    --accent-foreground: 0 0% 0%;
+    --border: 240 35% 15%;
+    --input: 240 35% 10%;
+    --ring: 260 80% 65%;
+  }
+
   /* Lunar Eclipse - Special Theme */
   .theme-lunar-eclipse {
     --background: 260 45% 8%;
@@ -270,6 +697,90 @@
     --border: 260 30% 18%;
     --input: 260 30% 13%;
     --ring: 270 60% 60%;
+  }
+
+  /* Akatsuki Night - Special Theme */
+  .theme-akatsuki-night {
+    --background: 0 50% 6%;
+    --foreground: 0 20% 92%;
+    --card: 0 45% 10%;
+    --card-foreground: 0 20% 92%;
+    --popover: 0 45% 10%;
+    --popover-foreground: 0 20% 92%;
+    --primary: 0 90% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 40% 14%;
+    --secondary-foreground: 0 20% 92%;
+    --muted: 0 35% 12%;
+    --muted-foreground: 0 18% 50%;
+    --accent: 0 70% 35%;
+    --accent-foreground: 0 0% 100%;
+    --border: 0 35% 17%;
+    --input: 0 35% 12%;
+    --ring: 0 90% 45%;
+  }
+
+  /* Zen Black - Special Theme */
+  .theme-zen-black {
+    --background: 0 0% 6%;
+    --foreground: 40 15% 88%;
+    --card: 0 0% 10%;
+    --card-foreground: 40 15% 88%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 40 15% 88%;
+    --primary: 40 60% 50%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 14%;
+    --secondary-foreground: 40 15% 88%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 40 10% 50%;
+    --accent: 40 50% 40%;
+    --accent-foreground: 0 0% 100%;
+    --border: 0 0% 17%;
+    --input: 0 0% 12%;
+    --ring: 40 60% 50%;
+  }
+
+  /* Misty Midnight - Special Theme */
+  .theme-misty-midnight {
+    --background: 180 20% 10%;
+    --foreground: 180 15% 88%;
+    --card: 180 18% 14%;
+    --card-foreground: 180 15% 88%;
+    --popover: 180 18% 14%;
+    --popover-foreground: 180 15% 88%;
+    --primary: 180 50% 50%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 180 15% 18%;
+    --secondary-foreground: 180 15% 88%;
+    --muted: 180 12% 16%;
+    --muted-foreground: 180 10% 50%;
+    --accent: 160 45% 45%;
+    --accent-foreground: 0 0% 100%;
+    --border: 180 12% 21%;
+    --input: 180 12% 16%;
+    --ring: 180 50% 50%;
+  }
+
+  /* Nebula Nights - Special Theme */
+  .theme-nebula-nights {
+    --background: 280 50% 5%;
+    --foreground: 280 25% 92%;
+    --card: 280 45% 9%;
+    --card-foreground: 280 25% 92%;
+    --popover: 280 45% 9%;
+    --popover-foreground: 280 25% 92%;
+    --primary: 290 85% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 280 40% 13%;
+    --secondary-foreground: 280 25% 92%;
+    --muted: 280 35% 11%;
+    --muted-foreground: 280 20% 50%;
+    --accent: 320 80% 55%;
+    --accent-foreground: 0 0% 100%;
+    --border: 280 35% 16%;
+    --input: 280 35% 11%;
+    --ring: 290 85% 60%;
   }
 
   * {
@@ -398,12 +909,57 @@
   100% { transform: rotate(360deg) translateX(10%); }
 }
 
+/* Nebula Nights - Nebula glow */
+.theme-nebula-nights::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(ellipse at 30% 20%, hsla(290, 85%, 50%, 0.15) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 80%, hsla(320, 80%, 50%, 0.12) 0%, transparent 45%);
+  animation: nebula-pulse 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes nebula-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Akatsuki Night - Red clouds */
+.theme-akatsuki-night::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background: 
+    radial-gradient(ellipse 100px 50px at 10% 20%, hsla(0, 70%, 40%, 0.3) 0%, transparent 100%),
+    radial-gradient(ellipse 120px 60px at 50% 40%, hsla(0, 80%, 35%, 0.25) 0%, transparent 100%),
+    radial-gradient(ellipse 80px 40px at 80% 70%, hsla(0, 75%, 38%, 0.28) 0%, transparent 100%);
+  animation: clouds-drift 30s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes clouds-drift {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
 /* Ensure content is above animations */
 .theme-space-odyssey > *,
 .theme-solar-flare > *,
 .theme-ghibli > *,
 .theme-vaporwave-neon > *,
-.theme-lunar-eclipse > * {
+.theme-lunar-eclipse > *,
+.theme-nebula-nights > *,
+.theme-akatsuki-night > * {
   position: relative;
   z-index: 1;
 }
@@ -426,6 +982,10 @@
     @apply rounded-xl overflow-hidden shadow-card hover:shadow-anime-hover transition-all duration-300;
   }
 
+  .anime-card-image {
+    @apply w-full aspect-[3/4] object-cover;
+  }
+
   .premium-badge {
     @apply bg-gradient-to-r from-amber-500 to-orange-500 text-white px-2 py-0.5 rounded-full text-xs font-semibold;
   }
@@ -436,6 +996,14 @@
 
   .theme-selector-btn.active {
     @apply ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-anime-hover {
+    box-shadow: var(--anime-card-hover);
   }
 }
 

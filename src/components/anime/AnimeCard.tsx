@@ -10,7 +10,7 @@ export interface AnimeCardProps {
   rating: number;
   episodes: number;
   type: 'anime' | 'donghua';
-  status: 'ongoing' | 'completed';
+  status: 'ongoing' | 'completed' | 'finished';
   genres: string[];
   year?: string;
 }

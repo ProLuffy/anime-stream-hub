@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/select';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import AvatarUpload from '@/components/profile/AvatarUpload';
 import { useTheme, themes, Theme } from '@/contexts/ThemeContext';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import { useWatchProgress } from '@/hooks/useWatchProgress';
@@ -118,6 +119,15 @@ const Settings: React.FC = () => {
                 <CardDescription>Manage your account information</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
+                {/* Avatar Upload */}
+                <div className="flex justify-center pb-4 border-b border-border">
+                  <AvatarUpload
+                    currentAvatar={profile.avatar}
+                    username={profile.username}
+                    onAvatarChange={(avatar) => updateProfile({ avatar })}
+                  />
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="username">Username</Label>
                   <Input
