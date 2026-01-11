@@ -71,13 +71,47 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+// Apply theme immediately to prevent flash
+const applyThemeToDOM = (themeId: string, category: 'light' | 'dark' | 'special') => {
+  const root = document.documentElement;
+  const body = document.body;
+  
+  // Get all theme classes to remove
+  const allThemeClasses = themes.map(t => `theme-${t.id}`);
+  
+  // Remove all theme classes
+  allThemeClasses.forEach(cls => {
+    root.classList.remove(cls);
+    body.classList.remove(cls);
+  });
+  
+  // Add new theme class if not default
+  if (themeId !== 'root') {
+    const themeClass = `theme-${themeId}`;
+    root.classList.add(themeClass);
+    body.classList.add(themeClass);
+  }
+  
+  // Set color scheme for proper scrollbar colors etc
+  const colorScheme = category === 'light' ? 'light' : 'dark';
+  root.style.colorScheme = colorScheme;
+  
+  // Set data attribute for additional CSS targeting
+  root.setAttribute('data-theme', themeId);
+  body.setAttribute('data-theme', themeId);
+};
+
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [currentTheme, setCurrentTheme] = useState<Theme>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('anicrew-theme');
       if (saved) {
         const found = themes.find(t => t.id === saved);
-        if (found) return found;
+        if (found) {
+          // Apply immediately on load
+          applyThemeToDOM(found.id, found.category);
+          return found;
+        }
       }
     }
     return themes[0]; // Default to Moonlight
@@ -87,37 +121,15 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     // Save to localStorage
     localStorage.setItem('anicrew-theme', currentTheme.id);
     
-    // Remove all theme classes from document root
-    const root = document.documentElement;
-    const body = document.body;
+    // Apply theme to DOM
+    applyThemeToDOM(currentTheme.id, currentTheme.category);
     
-    // Get all classes to remove
-    const classesToRemove: string[] = [];
-    root.classList.forEach(cls => {
-      if (cls.startsWith('theme-')) {
-        classesToRemove.push(cls);
-      }
-    });
-    
-    // Remove theme classes from both root and body
-    classesToRemove.forEach(cls => {
-      root.classList.remove(cls);
-      body.classList.remove(cls);
-    });
-    
-    // Add new theme class if not default
-    if (currentTheme.id !== 'root') {
-      root.classList.add(`theme-${currentTheme.id}`);
-      body.classList.add(`theme-${currentTheme.id}`);
-    }
-    
-    // Force a repaint by toggling a CSS property
-    root.style.colorScheme = currentTheme.category === 'dark' || currentTheme.category === 'special' ? 'dark' : 'light';
-    
-    console.log('Theme applied:', currentTheme.id, 'Class list:', root.classList.toString());
+    console.log('Theme applied:', currentTheme.id);
   }, [currentTheme]);
 
   const setTheme = (theme: Theme) => {
+    // Apply immediately for instant feedback
+    applyThemeToDOM(theme.id, theme.category);
     setCurrentTheme(theme);
   };
 

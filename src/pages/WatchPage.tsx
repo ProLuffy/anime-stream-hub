@@ -7,10 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   Download, Bookmark, ThumbsUp, MessageCircle, Share2, Clock,
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight, Crown
 } from 'lucide-react';
 import { useWatchProgress } from '@/hooks/useWatchProgress';
 import { useWatchlist } from '@/hooks/useWatchlist';
@@ -19,6 +19,7 @@ import { trendingAnime } from '@/data/mockAnime';
 import { getEpisodesForAnime } from '@/data/mockEpisodes';
 import { mockComments } from '@/data/mockComments';
 import { toast } from 'sonner';
+import { getAnimeById, getEpisode, getDownloadUrl, Episode as ApiEpisode } from '@/services/anime';
 
 interface DisplayComment {
   id: string;
@@ -48,8 +49,11 @@ const WatchPage: React.FC = () => {
     }))
   );
   const [isLiked, setIsLiked] = useState(false);
+  const [episodeData, setEpisodeData] = useState<ApiEpisode | null>(null);
+  const [isLoadingEpisode, setIsLoadingEpisode] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
-  // Find anime and episode
+  // Find anime and episode from mock data (fallback)
   const anime = trendingAnime.find(a => a.id === animeId);
   const episodes = animeId ? getEpisodesForAnime(animeId) : [];
   const currentEpNum = parseInt(episodeId || '1');
@@ -57,6 +61,23 @@ const WatchPage: React.FC = () => {
   
   const prevEpisode = currentEpNum > 1 ? currentEpNum - 1 : null;
   const nextEpisode = currentEpNum < episodes.length ? currentEpNum + 1 : null;
+
+  // Fetch episode data from backend
+  useEffect(() => {
+    if (animeId && episodeId) {
+      setIsLoadingEpisode(true);
+      getEpisode(animeId, currentEpNum)
+        .then(data => {
+          setEpisodeData(data);
+        })
+        .catch(error => {
+          console.log('Using fallback episode data');
+        })
+        .finally(() => {
+          setIsLoadingEpisode(false);
+        });
+    }
+  }, [animeId, episodeId, currentEpNum]);
 
   // Save progress on episode change
   useEffect(() => {
@@ -82,13 +103,38 @@ const WatchPage: React.FC = () => {
     toast.success('Comment posted!');
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!profile.isPremium) {
       toast.error('Premium subscription required to download');
       navigate('/premium');
       return;
     }
-    toast.success('Starting download...');
+
+    try {
+      setIsDownloading(true);
+      
+      // Try to get download URL from backend
+      if (animeId) {
+        const downloadUrl = await getDownloadUrl(animeId, currentEpNum, '720p');
+        if (downloadUrl) {
+          window.open(downloadUrl, '_blank');
+          toast.success('Download started!');
+          return;
+        }
+      }
+      
+      // Fallback if backend doesn't have download
+      if (episodeData?.downloadUrl) {
+        window.open(episodeData.downloadUrl, '_blank');
+        toast.success('Download started!');
+      } else {
+        toast.error('Download not available for this episode');
+      }
+    } catch (error) {
+      toast.error('Failed to start download');
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   if (!anime || !currentEpisode) {
@@ -129,13 +175,18 @@ const WatchPage: React.FC = () => {
               {/* Video Player */}
               <VideoPlayer
                 title={anime.title}
-                episodeTitle={currentEpisode.title}
+                episodeTitle={episodeData?.title || currentEpisode.title}
                 episodeNumber={currentEpNum}
+                animeId={animeId}
                 thumbnail={anime.image}
                 onPrev={() => prevEpisode && navigate(`/watch/${animeId}/${prevEpisode}`)}
                 onNext={() => nextEpisode && navigate(`/watch/${animeId}/${nextEpisode}`)}
                 hasPrev={!!prevEpisode}
                 hasNext={!!nextEpisode}
+                streams={episodeData?.streams}
+                subtitles={episodeData?.subtitles}
+                audioTracks={episodeData?.audioTracks}
+                downloadUrl={episodeData?.downloadUrl}
               />
 
               {/* Episode Navigation & Controls */}
@@ -181,19 +232,29 @@ const WatchPage: React.FC = () => {
                     <Share2 className="w-4 h-4 mr-1" />
                     Share
                   </Button>
+                  
+                  {/* Download Button - Premium Only */}
                   <Button 
                     variant={profile.isPremium ? "default" : "outline"}
                     onClick={handleDownload}
-                    className={profile.isPremium ? "bg-gradient-to-r from-amber-500 to-orange-500" : ""}
+                    disabled={isDownloading}
+                    className={profile.isPremium ? "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600" : ""}
                   >
-                    <Download className="w-4 h-4 mr-1" />
+                    {isDownloading ? (
+                      <div className="w-4 h-4 mr-1 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <Download className="w-4 h-4 mr-1" />
+                    )}
                     Download
-                    {!profile.isPremium && <Badge variant="secondary" className="ml-2 text-xs">Premium</Badge>}
+                    {!profile.isPremium && (
+                      <Badge variant="secondary" className="ml-2 text-xs gap-1">
+                        <Crown className="w-3 h-3" />
+                        Premium
+                      </Badge>
+                    )}
                   </Button>
                 </div>
               </div>
-
-              {/* Note: Audio, Subtitle, Quality, Speed settings are now in the VideoPlayer settings menu */}
 
               {/* Comments Section */}
               <Card>
@@ -205,18 +266,30 @@ const WatchPage: React.FC = () => {
 
                   {/* Add Comment */}
                   <div className="mb-6">
-                    <Textarea
-                      value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                      placeholder="Write a comment..."
-                      className="mb-2"
-                      rows={3}
-                    />
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground">{newComment.length}/500</span>
-                      <Button onClick={handleAddComment} disabled={!newComment.trim()}>
-                        Post Comment
-                      </Button>
+                    <div className="flex gap-3">
+                      <Avatar className="w-10 h-10 ring-2 ring-primary/10">
+                        {profile.avatar ? (
+                          <AvatarImage src={profile.avatar} alt={profile.username} />
+                        ) : null}
+                        <AvatarFallback className="bg-primary/10 text-primary">
+                          {profile.username[0]?.toUpperCase() || 'G'}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <Textarea
+                          value={newComment}
+                          onChange={(e) => setNewComment(e.target.value)}
+                          placeholder="Write a comment..."
+                          className="mb-2"
+                          rows={3}
+                        />
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-muted-foreground">{newComment.length}/500</span>
+                          <Button onClick={handleAddComment} disabled={!newComment.trim()}>
+                            Post Comment
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -224,8 +297,13 @@ const WatchPage: React.FC = () => {
                   <div className="space-y-4">
                     {comments.map(comment => (
                       <div key={comment.id} className="flex gap-3 p-3 rounded-lg bg-muted/50">
-                        <Avatar className="w-10 h-10">
-                          <AvatarFallback>{comment.username[0]}</AvatarFallback>
+                        <Avatar className="w-10 h-10 ring-2 ring-primary/10">
+                          {comment.avatar ? (
+                            <AvatarImage src={comment.avatar} alt={comment.username} />
+                          ) : null}
+                          <AvatarFallback className="bg-primary/10 text-primary">
+                            {comment.username[0]?.toUpperCase() || 'U'}
+                          </AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
@@ -308,6 +386,24 @@ const WatchPage: React.FC = () => {
                   </Link>
                 </CardContent>
               </Card>
+
+              {/* Premium CTA Card */}
+              {!profile.isPremium && (
+                <Card className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 border-amber-500/20">
+                  <CardContent className="p-4 text-center">
+                    <Crown className="w-10 h-10 mx-auto mb-2 text-amber-500" />
+                    <h4 className="font-semibold mb-1">Go Premium</h4>
+                    <p className="text-xs text-muted-foreground mb-3">
+                      Download episodes, ad-free viewing & more!
+                    </p>
+                    <Link to="/premium">
+                      <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600">
+                        Upgrade Now
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </div>
         </div>

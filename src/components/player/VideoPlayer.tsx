@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import {
@@ -15,32 +16,39 @@ import {
 } from '@/components/ui/dropdown-menu';
 import {
   Play, Pause, Volume2, VolumeX, Settings, Maximize, Minimize,
-  SkipBack, SkipForward, Subtitles, Gauge, Languages, ChevronLeft, ChevronRight
+  SkipBack, SkipForward, Subtitles, Gauge, Languages, ChevronLeft, ChevronRight,
+  Crown, Download
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useUserProfile } from '@/hooks/useUserProfile';
+import { toast } from 'sonner';
+import { getStreamUrl, getDownloadUrl, StreamSource, Subtitle, AudioTrack } from '@/services/anime';
 
 interface VideoPlayerProps {
   title: string;
   episodeTitle: string;
   episodeNumber: number;
+  animeId?: string;
   thumbnail?: string;
   onPrev?: () => void;
   onNext?: () => void;
   hasPrev?: boolean;
   hasNext?: boolean;
+  // Stream data from backend
+  streams?: StreamSource[];
+  subtitles?: Subtitle[];
+  audioTracks?: AudioTrack[];
+  downloadUrl?: string;
 }
 
-const qualityOptions = [
-  { value: '4k', label: '4K Ultra HD', badge: 'Best' },
-  { value: '1080p', label: '1080p Full HD', badge: null },
+const defaultQualityOptions = [
+  { value: '1080p', label: '1080p Full HD', badge: 'Best' },
   { value: '720p', label: '720p HD', badge: null },
   { value: '480p', label: '480p SD', badge: null },
-  { value: '360p', label: '360p', badge: 'Data Saver' },
   { value: 'auto', label: 'Auto', badge: 'Recommended' },
 ];
 
 const speedOptions = [
-  { value: 0.25, label: '0.25x' },
   { value: 0.5, label: '0.5x' },
   { value: 0.75, label: '0.75x' },
   { value: 1, label: 'Normal' },
@@ -50,32 +58,37 @@ const speedOptions = [
   { value: 2, label: '2x' },
 ];
 
-const audioOptions = [
-  { value: 'japanese', label: 'Japanese (Original)' },
-  { value: 'english', label: 'English Dub' },
-  { value: 'hindi', label: 'Hindi Dub' },
-  { value: 'tamil', label: 'Tamil Dub' },
+const defaultAudioOptions = [
+  { value: 'japanese', label: 'Japanese (Original)', default: true },
+  { value: 'english', label: 'English Dub', default: false },
+  { value: 'hindi', label: 'Hindi Dub', default: false },
+  { value: 'tamil', label: 'Tamil Dub', default: false },
+  { value: 'telugu', label: 'Telugu Dub', default: false },
 ];
 
-const subtitleOptions = [
+const defaultSubtitleOptions = [
   { value: 'none', label: 'Off' },
   { value: 'english', label: 'English' },
   { value: 'hindi', label: 'Hindi' },
-  { value: 'spanish', label: 'Spanish' },
-  { value: 'portuguese', label: 'Portuguese' },
-  { value: 'arabic', label: 'Arabic' },
 ];
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
   title,
   episodeTitle,
   episodeNumber,
+  animeId,
   thumbnail,
   onPrev,
   onNext,
   hasPrev = false,
   hasNext = false,
+  streams = [],
+  subtitles = [],
+  audioTracks = [],
+  downloadUrl,
 }) => {
+  const navigate = useNavigate();
+  const { profile } = useUserProfile();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(80);
@@ -83,15 +96,56 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const [duration] = useState(1440); // 24 minutes in seconds
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentStreamUrl, setCurrentStreamUrl] = useState<string>('');
   
   // Settings
   const [quality, setQuality] = useState('auto');
   const [speed, setSpeed] = useState(1);
   const [audio, setAudio] = useState('japanese');
   const [subtitle, setSubtitle] = useState('english');
+  const [subtitlesEnabled, setSubtitlesEnabled] = useState(true);
   
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const controlsTimeout = useRef<NodeJS.Timeout>();
+
+  // Build quality options from streams or use defaults
+  const qualityOptions = streams.length > 0 
+    ? streams.map(s => ({ 
+        value: s.quality, 
+        label: s.quality === '1080p' ? '1080p Full HD' : s.quality === '720p' ? '720p HD' : `${s.quality} SD`,
+        badge: s.quality === '1080p' ? 'Best' : null
+      }))
+    : defaultQualityOptions;
+
+  // Build audio options from tracks or use defaults
+  const audioOptions = audioTracks.length > 0
+    ? audioTracks.map(a => ({ value: a.language, label: a.label, default: a.default }))
+    : defaultAudioOptions;
+
+  // Build subtitle options from data or use defaults
+  const subtitleOptionsList = subtitles.length > 0
+    ? [{ value: 'none', label: 'Off' }, ...subtitles.map(s => ({ value: s.language, label: s.label }))]
+    : defaultSubtitleOptions;
+
+  // Load stream URL when quality changes
+  useEffect(() => {
+    if (animeId && quality !== 'auto') {
+      setIsLoading(true);
+      getStreamUrl(animeId, episodeNumber, quality)
+        .then(url => {
+          setCurrentStreamUrl(url);
+          setIsLoading(false);
+        })
+        .catch(() => {
+          setIsLoading(false);
+          // Use fallback stream from props if available
+          const stream = streams.find(s => s.quality === quality);
+          if (stream) setCurrentStreamUrl(stream.url);
+        });
+    }
+  }, [animeId, episodeNumber, quality, streams]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -121,19 +175,58 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
   const handleSeek = (value: number[]) => {
     setCurrentTime(value[0]);
+    if (videoRef.current) {
+      videoRef.current.currentTime = value[0];
+    }
   };
 
   const handleVolumeChange = (value: number[]) => {
     setVolume(value[0]);
     setIsMuted(value[0] === 0);
+    if (videoRef.current) {
+      videoRef.current.volume = value[0] / 100;
+    }
   };
 
   const skip = (seconds: number) => {
-    setCurrentTime(prev => Math.max(0, Math.min(duration, prev + seconds)));
+    const newTime = Math.max(0, Math.min(duration, currentTime + seconds));
+    setCurrentTime(newTime);
+    if (videoRef.current) {
+      videoRef.current.currentTime = newTime;
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!profile.isPremium) {
+      toast.error('Premium subscription required to download');
+      navigate('/premium');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      let url = downloadUrl;
+      
+      if (!url && animeId) {
+        url = await getDownloadUrl(animeId, episodeNumber, quality === 'auto' ? '720p' : quality);
+      }
+      
+      if (url) {
+        window.open(url, '_blank');
+        toast.success('Download started!');
+      } else {
+        toast.error('Download not available for this episode');
+      }
+    } catch (error) {
+      toast.error('Failed to get download link');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getCurrentQualityLabel = () => {
-    return qualityOptions.find(q => q.value === quality)?.label || 'Auto';
+    const option = qualityOptions.find(q => q.value === quality);
+    return option?.label || 'Auto';
   };
 
   return (
@@ -143,33 +236,49 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       onMouseMove={handleMouseMove}
       onMouseLeave={() => isPlaying && setShowControls(false)}
     >
-      {/* Video Placeholder / Thumbnail */}
-      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-background/90 to-background/70">
-        {thumbnail && (
-          <img
-            src={thumbnail}
-            alt={title}
-            className="absolute inset-0 w-full h-full object-cover opacity-30 blur-sm"
-          />
-        )}
-        <div className="relative z-10 text-center">
-          <div 
-            className="w-24 h-24 rounded-full bg-primary/20 backdrop-blur-sm flex items-center justify-center mb-4 mx-auto cursor-pointer hover:bg-primary/30 hover:scale-110 transition-all"
-            onClick={() => setIsPlaying(!isPlaying)}
-          >
-            {isPlaying ? (
-              <Pause className="w-12 h-12 text-primary" fill="currentColor" />
+      {/* Video Element (hidden when using StreamTape embed) */}
+      {currentStreamUrl && (
+        <iframe
+          src={currentStreamUrl}
+          className="absolute inset-0 w-full h-full"
+          allowFullScreen
+          allow="autoplay; encrypted-media"
+        />
+      )}
+
+      {/* Video Placeholder / Thumbnail (shown when no stream) */}
+      {!currentStreamUrl && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-background/90 to-background/70">
+          {thumbnail && (
+            <img
+              src={thumbnail}
+              alt={title}
+              className="absolute inset-0 w-full h-full object-cover opacity-30 blur-sm"
+            />
+          )}
+          <div className="relative z-10 text-center">
+            {isLoading ? (
+              <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             ) : (
-              <Play className="w-12 h-12 text-primary ml-1" fill="currentColor" />
+              <div 
+                className="w-24 h-24 rounded-full bg-primary/20 backdrop-blur-sm flex items-center justify-center mb-4 mx-auto cursor-pointer hover:bg-primary/30 hover:scale-110 transition-all"
+                onClick={() => setIsPlaying(!isPlaying)}
+              >
+                {isPlaying ? (
+                  <Pause className="w-12 h-12 text-primary" fill="currentColor" />
+                ) : (
+                  <Play className="w-12 h-12 text-primary ml-1" fill="currentColor" />
+                )}
+              </div>
             )}
+            <p className="text-lg font-semibold mb-1">{title}</p>
+            <p className="text-muted-foreground">Episode {episodeNumber}: {episodeTitle}</p>
+            <p className="text-xs text-muted-foreground mt-3 bg-background/50 backdrop-blur-sm px-3 py-1 rounded-full inline-block">
+              Click to load stream
+            </p>
           </div>
-          <p className="text-lg font-semibold mb-1">{title}</p>
-          <p className="text-muted-foreground">Episode {episodeNumber}: {episodeTitle}</p>
-          <p className="text-xs text-muted-foreground mt-3 bg-background/50 backdrop-blur-sm px-3 py-1 rounded-full inline-block">
-            StreamTape/DoomStream Player Integration Ready
-          </p>
         </div>
-      </div>
+      )}
 
       {/* Quality Badge */}
       <div className="absolute top-4 right-4 z-20">
@@ -298,6 +407,19 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
               </span>
             )}
 
+            {/* Download Button (Premium Only) */}
+            {profile.isPremium && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-amber-400 hover:bg-white/20 h-8 w-8 sm:h-10 sm:w-10"
+                onClick={handleDownload}
+                disabled={isLoading}
+              >
+                <Download className="w-4 h-4 sm:w-5 sm:h-5" />
+              </Button>
+            )}
+
             {/* Settings Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -383,19 +505,52 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
                     <Subtitles className="w-4 h-4 mr-2" />
                     Subtitles
                     <span className="ml-auto text-xs text-muted-foreground capitalize">
-                      {subtitleOptions.find(s => s.value === subtitle)?.label}
+                      {subtitlesEnabled ? subtitleOptionsList.find(s => s.value === subtitle)?.label : 'Off'}
                     </span>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuSubContent>
+                    <DropdownMenuItem onClick={() => setSubtitlesEnabled(!subtitlesEnabled)}>
+                      <span className="flex-1">Subtitles</span>
+                      <span className={cn(
+                        "text-xs px-1.5 py-0.5 rounded",
+                        subtitlesEnabled ? "bg-green-500/20 text-green-500" : "bg-muted text-muted-foreground"
+                      )}>
+                        {subtitlesEnabled ? 'ON' : 'OFF'}
+                      </span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
                     <DropdownMenuRadioGroup value={subtitle} onValueChange={setSubtitle}>
-                      {subtitleOptions.map((s) => (
-                        <DropdownMenuRadioItem key={s.value} value={s.value}>
+                      {subtitleOptionsList.map((s) => (
+                        <DropdownMenuRadioItem key={s.value} value={s.value} disabled={!subtitlesEnabled && s.value !== 'none'}>
                           {s.label}
                         </DropdownMenuRadioItem>
                       ))}
                     </DropdownMenuRadioGroup>
                   </DropdownMenuSubContent>
                 </DropdownMenuSub>
+
+                <DropdownMenuSeparator />
+
+                {/* Premium CTA */}
+                {!profile.isPremium && (
+                  <DropdownMenuItem 
+                    onClick={() => navigate('/premium')}
+                    className="cursor-pointer"
+                  >
+                    <Crown className="w-4 h-4 mr-2 text-amber-500" />
+                    <span className="text-amber-500 font-medium">
+                      Buy Premium for Better Experience
+                    </span>
+                  </DropdownMenuItem>
+                )}
+
+                {/* Download option in settings for premium */}
+                {profile.isPremium && (
+                  <DropdownMenuItem onClick={handleDownload} disabled={isLoading}>
+                    <Download className="w-4 h-4 mr-2 text-amber-500" />
+                    <span className="text-amber-500 font-medium">Download Episode</span>
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 

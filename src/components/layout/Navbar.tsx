@@ -13,34 +13,31 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Link, useNavigate } from 'react-router-dom';
 import SearchOverlay from '@/components/search/SearchOverlay';
 import { toast } from 'sonner';
-
-interface StoredUser {
-  email: string;
-  username: string;
-  avatar?: string;
-  isPremium: boolean;
-  isAdmin?: boolean;
-}
+import { useUserProfile } from '@/hooks/useUserProfile';
 
 const Navbar: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [user, setUser] = useState<StoredUser | null>(null);
+  const { profile } = useUserProfile();
   const { currentTheme, setTheme, quickThemes } = useTheme();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('anicrew_user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
+  // Get user from profile hook which syncs with localStorage
+  const isLoggedIn = profile.email && profile.email !== '';
+  const user = {
+    username: profile.username,
+    email: profile.email || '',
+    avatar: profile.avatar,
+    isPremium: profile.isPremium,
+    isAdmin: profile.isAdmin,
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('anicrew_user');
-    setUser(null);
+    localStorage.removeItem('anicrew-user-profile');
     toast.success('Logged out successfully');
     navigate('/');
+    window.location.reload();
   };
 
   return (
@@ -109,7 +106,7 @@ const Navbar: React.FC = () => {
             </div>
 
             {/* Premium Button */}
-            {!user?.isPremium && (
+            {!user.isPremium && (
               <Link to="/premium" className="hidden sm:block">
                 <Button variant="outline" size="sm" className="gap-1 border-amber-500/50 text-amber-500 hover:bg-amber-500/10">
                   <Crown className="w-4 h-4" />
@@ -128,29 +125,40 @@ const Navbar: React.FC = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="relative">
-                  {user ? (
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={user.avatar} />
-                      <AvatarFallback className="bg-primary text-primary-foreground text-sm">
-                        {user.username[0].toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                  ) : (
-                    <User className="w-5 h-5" />
+                  <Avatar className="w-8 h-8 ring-2 ring-primary/20">
+                    {user.avatar ? (
+                      <AvatarImage src={user.avatar} alt={user.username} />
+                    ) : null}
+                    <AvatarFallback className="bg-primary text-primary-foreground text-sm">
+                      {user.username[0]?.toUpperCase() || 'G'}
+                    </AvatarFallback>
+                  </Avatar>
+                  {user.isPremium && (
+                    <Crown className="absolute -top-1 -right-1 w-4 h-4 text-amber-500 fill-amber-500" />
                   )}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                {user ? (
+                {isLoggedIn ? (
                   <>
-                    <div className="px-3 py-2">
-                      <p className="text-sm font-medium">{user.username}</p>
-                      <p className="text-xs text-muted-foreground">{user.email}</p>
-                      {user.isPremium && (
-                        <span className="inline-flex items-center gap-1 mt-1 text-xs text-amber-500">
-                          <Crown className="w-3 h-3" /> Premium Member
-                        </span>
-                      )}
+                    <div className="px-3 py-2 flex items-center gap-3">
+                      <Avatar className="w-10 h-10">
+                        {user.avatar ? (
+                          <AvatarImage src={user.avatar} alt={user.username} />
+                        ) : null}
+                        <AvatarFallback className="bg-primary text-primary-foreground">
+                          {user.username[0]?.toUpperCase() || 'G'}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="text-sm font-medium">{user.username}</p>
+                        <p className="text-xs text-muted-foreground">{user.email}</p>
+                        {user.isPremium && (
+                          <span className="inline-flex items-center gap-1 mt-0.5 text-xs text-amber-500">
+                            <Crown className="w-3 h-3" /> Premium Member
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
@@ -173,12 +181,14 @@ const Navbar: React.FC = () => {
                         Settings
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link to="/admin" className="w-full cursor-pointer">
-                        <Shield className="w-4 h-4 mr-2" />
-                        Admin Panel
-                      </Link>
-                    </DropdownMenuItem>
+                    {user.isAdmin && (
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin" className="w-full cursor-pointer">
+                          <Shield className="w-4 h-4 mr-2" />
+                          Admin Panel
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive">
                       <LogOut className="w-4 h-4 mr-2" />
@@ -187,9 +197,14 @@ const Navbar: React.FC = () => {
                   </>
                 ) : (
                   <>
-                    <div className="px-3 py-2">
-                      <p className="text-sm font-medium">Guest User</p>
-                      <p className="text-xs text-muted-foreground">Sign in to save progress</p>
+                    <div className="px-3 py-2 flex items-center gap-3">
+                      <Avatar className="w-10 h-10">
+                        <AvatarFallback className="bg-muted">G</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="text-sm font-medium">Guest User</p>
+                        <p className="text-xs text-muted-foreground">Sign in to save progress</p>
+                      </div>
                     </div>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>

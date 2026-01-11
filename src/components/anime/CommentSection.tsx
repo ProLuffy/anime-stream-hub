@@ -5,13 +5,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Comment } from '@/data/mockComments';
 import { formatDistanceToNow } from 'date-fns';
+import { useUserProfile } from '@/hooks/useUserProfile';
 
 interface CommentSectionProps {
   comments: Comment[];
   animeId: string;
 }
 
-const CommentItem: React.FC<{ comment: Comment; depth?: number }> = ({ comment, depth = 0 }) => {
+interface CommentItemProps {
+  comment: Comment;
+  depth?: number;
+}
+
+const CommentItem: React.FC<CommentItemProps> = ({ comment, depth = 0 }) => {
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [replyText, setReplyText] = useState('');
   const [liked, setLiked] = useState(false);
@@ -19,9 +25,11 @@ const CommentItem: React.FC<{ comment: Comment; depth?: number }> = ({ comment, 
   return (
     <div className={`${depth > 0 ? 'ml-8 border-l-2 border-border pl-4' : ''}`}>
       <div className="flex gap-3 py-4">
-        <Avatar className="w-10 h-10">
-          <AvatarImage src={comment.avatar} />
-          <AvatarFallback>{comment.username[0]}</AvatarFallback>
+        <Avatar className="w-10 h-10 ring-2 ring-primary/10">
+          <AvatarImage src={comment.avatar} alt={comment.username} />
+          <AvatarFallback className="bg-primary/10 text-primary">
+            {comment.username[0]?.toUpperCase()}
+          </AvatarFallback>
         </Avatar>
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1">
@@ -77,6 +85,7 @@ const CommentItem: React.FC<{ comment: Comment; depth?: number }> = ({ comment, 
 
 const CommentSection: React.FC<CommentSectionProps> = ({ comments, animeId }) => {
   const [newComment, setNewComment] = useState('');
+  const { profile } = useUserProfile();
 
   const handleSubmit = () => {
     if (!newComment.trim()) return;
@@ -91,8 +100,13 @@ const CommentSection: React.FC<CommentSectionProps> = ({ comments, animeId }) =>
 
       {/* New Comment Input */}
       <div className="flex gap-3">
-        <Avatar className="w-10 h-10">
-          <AvatarFallback>G</AvatarFallback>
+        <Avatar className="w-10 h-10 ring-2 ring-primary/10">
+          {profile.avatar ? (
+            <AvatarImage src={profile.avatar} alt={profile.username} />
+          ) : null}
+          <AvatarFallback className="bg-primary/10 text-primary">
+            {profile.username[0]?.toUpperCase() || 'G'}
+          </AvatarFallback>
         </Avatar>
         <div className="flex-1 space-y-2">
           <Textarea
